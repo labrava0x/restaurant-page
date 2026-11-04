@@ -1,41 +1,57 @@
 // src/home.js
 export default function loadHome() {
     const contentDiv = document.querySelector("#content");
-    contentDiv.innerHTML = ""; // Clear out any existing content
+    contentDiv.innerHTML = "";
 
-    // Headline
-    const headline = document.createElement("h1");
-    headline.textContent = "The Legendary Chef Gusteau";
+    const container = document.createElement("div");
+    container.classList.add("home-container");
 
-    // Neon Sign Container with 5 Stars Below
+    // Rooftop Neon Sign
     const neonSign = document.createElement("div");
-    neonSign.style.cssText = `
-        background-color: #121212;
-        border: 3px solid #ff4d4d;
-        border-radius: 15px;
-        padding: 30px;
-        text-align: center;
-        max-width: 400px;
-        margin: 20px auto;
-        box-shadow: 0 0 15px rgba(255, 77, 77, 0.4), inset 0 0 15px rgba(255, 77, 77, 0.2);
-    `;
-    
+    neonSign.classList.add("neon-sign");
     neonSign.innerHTML = `
-        <div style="font-size: 35px; margin-bottom: 5px;">👨‍🍳</div>
-        <h2 style="color: #ffffff; font-family: serif; font-size: 28px; letter-spacing: 3px; text-shadow: 0 0 10px #ff8080, 0 0 20px #ff4d4d; margin: 0 0 8px 0;">GUSTEAU'S</h2>
-        <div style="font-size: 22px; color: #ffeb3b; text-shadow: 0 0 10px #ffeb3b, 0 0 20px #ff9800; letter-spacing: 4px;">★★★★★</div>
+        <div class="chef-icon">👨‍🍳</div>
+        <h1 class="sign-title">GUSTEAU'S</h1>
+        <div class="five-stars">★★★★★</div>
     `;
 
-    // Description Paragraphs
+    // Building Structure Underneath
+    const buildingBody = document.createElement("div");
+    buildingBody.classList.add("building-body");
+    buildingBody.innerHTML = `
+        <div class="window-row">
+            <div class="bistro-window"></div>
+            <div class="bistro-window"></div>
+            <div class="bistro-window"></div>
+        </div>
+        <div class="window-row">
+            <div class="bistro-window"></div>
+            <div class="bistro-window"></div>
+            <div class="bistro-window"></div>
+        </div>
+        <div class="restaurant-entrance">
+            <div class="red-awning"></div>
+            <div class="entrance-sign">Grand Entrance</div>
+        </div>
+    `;
+
+    // Your Exact Homepage Text Box
+    const infoBox = document.createElement("div");
+    infoBox.classList.add("info-box");
+
+    const headline = document.createElement("h2");
+    headline.classList.add("restaurant-title");
+    headline.textContent = "Welcome to Gusteau's";
+
     const p1 = document.createElement("p");
-    p1.textContent = 'You can feel the spirit in every bite, and if you figure out how the recipe was made, you might get a surprise!';
+    p1.classList.add("intro-text");
+    p1.textContent = "Welcome, Monsieurs and madams to the main Parisian Gusteau's restaurant! Where food and dreams are savoured together. The highest cuisine, the highest standards for those seeking the ultimate craft.";
 
-    const p2 = document.createElement("p");
-    p2.textContent = "Find the puzzle, or just feel it in your mouth along the way! Which will be first?";
+    infoBox.appendChild(headline);
+    infoBox.appendChild(p1);
 
-    // Append everything to #content
-    contentDiv.appendChild(headline);
-    contentDiv.appendChild(neonSign);
-    contentDiv.appendChild(p1);
-    contentDiv.appendChild(p2);
+    container.appendChild(neonSign);
+    container.appendChild(buildingBody);
+    container.appendChild(infoBox);
+    contentDiv.appendChild(container);
 }

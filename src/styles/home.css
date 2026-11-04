@@ -1,0 +1,119 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.neon-sign {
+    background: radial-gradient(circle at center, #2b0306 0%, #120002 100%);
+    border: 4px solid #ff1a3c;
+    border-radius: 35px 35px 15px 15px;
+    padding: 30px 40px;
+    text-align: center;
+    z-index: 10;
+    box-shadow: 0 0 25px rgba(255, 26, 60, 0.8), 0 0 50px rgba(255, 26, 60, 0.4);
+    max-width: 520px;
+    width: 100%;
+}
+
+.chef-icon {
+    font-size: 4.5rem;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 0 12px rgba(255, 235, 150, 1));
+}
+
+.sign-title {
+    font-family: 'Cinzel', serif;
+    font-size: 3.2rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 7px;
+    text-shadow: 0 0 5px #ffffff, 0 0 15px #ff1a3c, 0 0 30px #ff1a3c;
+}
+
+.five-stars {
+    font-size: 2rem;
+    color: #ffcc00;
+    letter-spacing: 12px;
+    margin-top: 10px;
+    text-shadow: 0 0 10px #ffcc00, 0 0 20px #ff9900;
+}
+
+.building-body {
+    width: 85%;
+    max-width: 480px;
+    background: linear-gradient(180deg, #3d2d27 0%, #201411 100%);
+    border: 4px solid #4a3525;
+    border-top: none;
+    padding: 25px 20px 15px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+}
+
+.window-row {
+    display: flex;
+    gap: 25px;
+}
+
+.bistro-window {
+    width: 55px;
+    height: 80px;
+    background: linear-gradient(180deg, #ffcc00 0%, #ff5500 100%);
+    border: 3px solid #1a120e;
+    border-radius: 30px 30px 4px 4px;
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.6);
+}
+
+.restaurant-entrance {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.red-awning {
+    width: 100%;
+    height: 25px;
+    background: linear-gradient(180deg, #cc0000 0%, #550000 100%);
+    border-radius: 0 0 12px 12px;
+    border-bottom: 2px solid #ffd700;
+}
+
+.entrance-sign {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: #ffd700;
+    letter-spacing: 2px;
+    margin-top: 4px;
+}
+
+.info-box {
+    width: 90%;
+    max-width: 520px;
+    background: rgba(15, 10, 8, 0.9);
+    border: 4px solid #4a3525;
+    border-top: none;
+    padding: 20px;
+    text-align: center;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+}
+
+.restaurant-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: #ffd700;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.intro-text {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: #f7e7c4;
+}
