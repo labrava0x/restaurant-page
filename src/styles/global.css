@@ -7,7 +7,7 @@
 }
 
 body {
-    background: linear-gradient(180deg, #07090f 0%, #11141c 50%, #1a1412 100%);
+    background: linear-gradient(180deg, #2b0b0f 0%, #170406 50%, #0d0203 100%) !important;
     color: #fceecb;
     font-family: 'Playfair Display', Georgia, serif;
     min-height: 100vh;

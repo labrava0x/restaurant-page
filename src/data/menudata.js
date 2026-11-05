@@ -1,234 +1,256 @@
-// Inside src/data/menu.js
-import menudata from "./menudata.js";
-const { pagesData, totalPages } = menudata;
+// ==========================================
+// LE GRAND MENU: GUSTEAU - MENU DATA
+// ==========================================
 
-export default function loadMenu() {
-    const contentDiv = document.querySelector("#content");
-    contentDiv.innerHTML = "";
+export const pricingTiers = {
+    solo: "1p",
+    duo: "2p",
+    group: "4p+"
+};
 
-    const menuContainer = document.createElement("div");
-    menuContainer.classList.add("menu-container");
-
-    const menuWrapper = document.createElement("div");
-    menuWrapper.classList.add("menu-wrapper");
-
-    // --- EXTERNAL CONTROLS (Outside the Book) ---
-    const externalControls = document.createElement("div");
-    externalControls.classList.add("menu-external-controls");
-
-    const closeMenuBtn = document.createElement("button");
-    closeMenuBtn.classList.add("external-action-btn", "close-btn");
-    closeMenuBtn.textContent = "✕ Close Menu";
-    closeMenuBtn.addEventListener("click", () => {
-        currentPage = 1; // Snap shut instantly to front cover
-        renderMenu();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    const orderBtn = document.createElement("button");
-    orderBtn.classList.add("external-action-btn", "order-btn");
-    orderBtn.textContent = "🍽 Place Order";
-    orderBtn.addEventListener("click", () => {
-        alert("Thank you! Your order has been placed and sent straight to Chef Remy's kitchen! Bon appétit!");
-    });
-
-    externalControls.appendChild(closeMenuBtn);
-    externalControls.appendChild(orderBtn);
-    menuContainer.appendChild(externalControls);
-
-    // --- THE MENU BOOK ---
-    const menuBook = document.createElement("div");
-    menuBook.classList.add("menu-book");
-
-    let currentPage = 1; // 1 = Front Cover (Closed), 2-25 = Open Spreads, 26 = Back Cover (Closed)
-    const BACK_COVER_PAGE = totalPages + 1; // 26
-
-    function renderMenu() {
-        menuBook.innerHTML = "";
-        const activeSpread = document.createElement("div");
-
-        // --- 1. FRONT COVER (Closed State) ---
-        if (currentPage === 1) {
-            menuBook.classList.add("is-closed");
-            activeSpread.classList.add("active-page-sheet", "single-cover-page");
-            activeSpread.innerHTML = `
-                <div class="menu-cover-overlay">
-                    <div class="cover-badge">★ ★ ★ ★ ★</div>
-                    <h1 class="cover-title">The Main Menu</h1>
-                    <h2 class="cover-subtitle">GUSTEAU'S</h2>
-                    <p class="cover-tagline">"Where food and dreams are savoured together."</p>
-                    <div class="cover-divider"></div>
-                    <p class="cover-instructions">Click 'Next ►' below to open the menu booklet.</p>
-                </div>
-            `;
-        } 
-        // --- 2. BACK COVER (Closed State at the End) ---
-        else if (currentPage >= BACK_COVER_PAGE) {
-            menuBook.classList.add("is-closed");
-            activeSpread.classList.add("active-page-sheet", "single-cover-page");
-            activeSpread.innerHTML = `
-                <div class="menu-cover-overlay">
-                    <div class="cover-badge">END</div>
-                    <h2 class="cover-subtitle" style="margin-top: 20px;">GUSTEAU'S</h2>
-                    <p class="cover-tagline">"Anyone can cook, but only the fearless find true greatness."</p>
-                    <div class="cover-divider"></div>
-                    <p class="cover-instructions">You have reached the back cover. Click 'Close Menu' to exit.</p>
-                </div>
-            `;
-        }
-        // --- 3. OPEN BOOK SPREAD (Pages 2 to 25) ---
-        else {
-            menuBook.classList.remove("is-closed");
-            activeSpread.classList.add("active-page-sheet", "open-book-spread");
-
-            // Golden spine thread down the center gutter
-            const goldenSpine = document.createElement("div");
-            goldenSpine.classList.add("golden-spine-thread");
-
-            // Left Page
-            const leftPage = document.createElement("div");
-            leftPage.classList.add("book-page", "left-page");
-            populatePageContent(leftPage, currentPage);
-
-            // Right Page
-            const rightPageIndex = currentPage + 1;
-            const rightPage = document.createElement("div");
-            rightPage.classList.add("book-page", "right-page");
-            
-            if (rightPageIndex <= totalPages) {
-                populatePageContent(rightPage, rightPageIndex);
-            } else {
-                rightPage.innerHTML = `<div class="end-page-notice" style="text-align: center; padding-top: 100px;"><h3 style="font-family: 'Cinzel', serif; color: #8b0000;">End of Menu</h3><p style="color: #666; font-style: italic; margin-top: 10px;">Turn forward to view the back cover.</p></div>`;
-            }
-
-            activeSpread.appendChild(leftPage);
-            activeSpread.appendChild(goldenSpine);
-            activeSpread.appendChild(rightPage);
-        }
-
-        menuBook.appendChild(activeSpread);
-
-        // --- BOTTOM PAGE FOOTER (Spread Navigation) ---
-        const pageFooter = document.createElement("div");
-        pageFooter.classList.add("menu-page-footer");
-
-        const prevBtn = document.createElement("button");
-        prevBtn.classList.add("book-nav-btn");
-        prevBtn.textContent = "◄ Previous";
-        prevBtn.disabled = currentPage === 1;
-        prevBtn.addEventListener("click", () => {
-            if (currentPage > 1) {
-                if (currentPage === 2) {
-                    currentPage = 1; // Back to front cover
-                } else if (currentPage === BACK_COVER_PAGE) {
-                    currentPage = totalPages - 1; // Go back to last spread
-                } else {
-                    currentPage -= 2;
-                }
-                renderMenu();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-
-        const pageNumbering = document.createElement("span");
-        pageNumbering.classList.add("page-numbering-bottom");
-        if (currentPage === 1) {
-            pageNumbering.textContent = `— Front Cover —`;
-        } else if (currentPage >= BACK_COVER_PAGE) {
-            pageNumbering.textContent = `— Back Cover —`;
-        } else {
-            const rightNum = currentPage + 1 <= totalPages ? currentPage + 1 : totalPages;
-            pageNumbering.textContent = `— Pages ${currentPage} & ${rightNum} of ${totalPages} —`;
-        }
-
-        const nextBtn = document.createElement("button");
-        nextBtn.classList.add("book-nav-btn");
-        nextBtn.textContent = "Next ►";
-        nextBtn.addEventListener("click", () => {
-            if (currentPage === 1) {
-                currentPage = 2; // Open book from front cover to pages 2 & 3
-            } else if (currentPage >= totalPages - 1) {
-                currentPage = BACK_COVER_PAGE; // Move to back cover
-            } else {
-                currentPage += 2; // Flip spread forward
-            }
-            renderMenu();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        pageFooter.appendChild(prevBtn);
-        pageFooter.appendChild(pageNumbering);
-        pageFooter.appendChild(nextBtn);
-
-        menuBook.appendChild(pageFooter);
-    }
-
-    function populatePageContent(pageContainer, pageNum) {
-        if (pageNum === 2) {
-            pageContainer.innerHTML = `
-                <h2 class="menu-title">Table of Contents</h2>
-                <p class="toc-intro">Explore our curated culinary sections:</p>
-                <div class="toc-list">
-                    <div class="toc-item"><span>I. Regular Menu</span><span>Pages 4–9</span></div>
-                    <div class="toc-item"><span>II. Special Course Menu</span><span>Page 10</span></div>
-                    <div class="toc-item"><span>III. Lovers' Menu</span><span>Page 11</span></div>
-                    <div class="toc-item"><span>IV. Gluten-Free Menu</span><span>Page 12</span></div>
-                    <div class="toc-item"><span>V. Children's Menu</span><span>Page 13</span></div>
-                    <div class="toc-item"><span>VI. Desserts & Valrhona</span><span>Page 14</span></div>
-                    <div class="toc-item"><span>VII. Fine Wines & Champagne</span><span>Pages 15–19</span></div>
-                    <div class="toc-item"><span>VIII. Coffees, Teas & Waters</span><span>Pages 20–25</span></div>
-                </div>
-            `;
-        } else if (pageNum === 3) {
-            pageContainer.innerHTML = `
-                <h2 class="menu-title">The Chef's Challenge</h2>
-                <div class="puzzle-box">
-                    <h3 class="puzzle-heading">The Chef's Challenge</h3>
-                    <p class="puzzle-text">You can feel the spirit in every bite, and if you figure out how the recipe was made, you might get a surprise!</p>
-                </div>
-                <p style="text-align: center; font-style: italic; color: #555; margin-top: 20px;">Turn the page to enter our fine dining selections.</p>
-            `;
-        } else {
-            const title = document.createElement("h3");
-            title.classList.add("spread-page-header");
-            title.textContent = "Gusteau's Grand Menu";
-            pageContainer.appendChild(title);
-
-            const menuList = document.createElement("div");
-            menuList.classList.add("menu-list");
-
-            if (pagesData[pageNum]) {
-                pagesData[pageNum].forEach(cat => {
-                    const catHeader = document.createElement("h4");
-                    catHeader.classList.add("menu-category-title");
-                    catHeader.textContent = cat.categoryName;
-                    menuList.appendChild(catHeader);
-
-                    cat.items.forEach(dish => {
-                        const item = document.createElement("div");
-                        item.classList.add("menu-item");
-                        item.innerHTML = `
-                            <div class="dish-header">
-                                <span class="dish-name">${dish.name}</span>
-                                <span class="dish-price">${dish.price}</span>
-                            </div>
-                            <p class="dish-desc">${dish.desc}</p>
-                        `;
-                        menuList.appendChild(item);
-                    });
-                });
-            }
-            pageContainer.appendChild(menuList);
-        }
-
-        const pageNumIndicator = document.createElement("div");
-        pageNumIndicator.classList.add("page-corner-number");
-        pageNumIndicator.textContent = pageNum;
-        pageContainer.appendChild(pageNumIndicator);
-    }
-
-    renderMenu();
-    menuWrapper.appendChild(menuBook);
-    menuContainer.appendChild(menuWrapper);
-    contentDiv.appendChild(menuContainer);
+function p(soloPrice, duoPrice, groupPrice) {
+    return `${soloPrice} € (1p) / ${duoPrice} € (2p) / ${groupPrice} € (4p+)`;
 }
+
+export const menuData = [
+    {
+        restaurant: "Le Grand Restaurant Gusteau",
+        pages: [
+            {
+                pageNumber: 1,
+                category: "Cover",
+                items: []
+            },
+            {
+                pageNumber: 2,
+                category: "Sommaire du Livre",
+                items: [
+                    {
+                        name: "Table of Contents",
+                        price: "—",
+                        description: "Page 3 — Le Chariot de Pains & Entrées\n• Le Chariot de Pains Artisanaux\n• Salade Niçoise au Thon Rouge\n• Salade de Chèvre Chaud au Miel de Lavande\n\nPage 4 — Les Entrées\n• Amuse-Bouche du Chef\n• Foie Gras Poêlé au Chutney de Figues\n• Gougères au Comté AOP\n\nPage 5 — Les Soupes\n• Bouillabaisse\n• Soupe à la Gusteau\n• Vichyssoise Glacée\n• Soupe de Poireaux et Pommes de Terre\n• La Soupe Suprême\n\nPage 6 — Poissons & Fruits de Mer\n• Poisson Flambé\n• Filet de Sole Meunière\n• Homard Rôti au Beurre Blanc\n\nPage 7 — Plats Principaux & Ratatouille\n• Ratatouille\n• Gigot d'Agneau de Sept Heures\n• Confit de Canard\n• Blanquette de Veau\n\nPage 8 — Viandes & Flambé\n• Viande Flambée\n• Bœuf Bourguignon\n• Entrecôte Café de Paris\n\nPage 9 — Menu Enfant, Options Sans Gluten [GF] & Le Menu Amoureux\n• Le Petit Chef\n• Poulet Rôti aux Herbes [GF]\n• Le Menu Amoureux\n\nPage 10 — Les Fromages\n• Sélection de Finissants Fromages\n• Fontaine de Fondu de Fromage\n\nPage 11 — Les Desserts & Flambé, Vins, Cafés & Thés\n• Dessert Flambé\n• Tarte Tatin à la Gusteau\n• Fontaine de Chocolat avec Fraises Éco\n• Le Dessert du Jour\n• La Sélection des Vins\n• Cafés & Thés\n\nPage 12 — Quatrième de Couverture"
+                    }
+                ]
+            },
+            {
+                pageNumber: 3,
+                category: "Le Chariot de Pains & Entrées",
+                items: [
+                    {
+                        name: "Le Chariot de Pains Artisanaux",
+                        price: "Offert / Compris",
+                        description: "Presented tableside—an exquisite selection of freshly baked baguettes, rustic sourdough bâtards, olive fougasse, and country breads served with cultured butter and Maldon sea salt flakes. [V, DF, NF]"
+                    },
+                    {
+                        name: "Salade Niçoise au Thon Rouge",
+                        price: "22 € (1p) / 40 € (2p) / 76 € (4p+)",
+                        description: "Baby gem lettuce, line-caught seared bluefin tuna, heirloom cherry tomatoes, soft quail eggs, niçoise olives, and lemon-herb vinaigrette. [GF, DF]"
+                    },
+                    {
+                        name: "Salade de Chèvre Chaud au Miel de Lavande",
+                        price: "19 € (1p) / 34 € (2p) / 64 € (4p+)",
+                        description: "Warm goat cheese crostini over mixed field greens, toasted walnuts, and a delicate lavender-infused honey drizzle. [V, GF]"
+                    }
+                ]
+            },
+            {
+                pageNumber: 4,
+                category: "Les Entrées",
+                items: [
+                    {
+                        name: "Amuse-Bouche du Chef",
+                        price: "16 € (1p) / 30 € (2p) / 58 € (4p+)",
+                        description: "A delicate surprise creation from the kitchen to awaken the palate. [Chef's Daily Selection]"
+                    },
+                    {
+                        name: "Foie Gras Poêlé au Chutney de Figues",
+                        price: "28 € (1p) / 52 € (2p) / 98 € (4p+)",
+                        description: "Pan-seared duck foie gras served with spiced fig chutney and toasted brioche. [NF]"
+                    },
+                    {
+                        name: "Gougères au Comté AOP",
+                        price: "15 € (1p) / 28 € (2p) / 52 € (4p+)",
+                        description: "Warm, airy choux pastry puffs baked with aged Comté cheese. [V]"
+                    }
+                ]
+            },
+            {
+                pageNumber: 5,
+                category: "Les Soupes",
+                items: [
+                    {
+                        name: "Bouillabaisse",
+                        price: "28 € (1p) / 52 € (2p) / 98 € (4p+)",
+                        description: "Classic coastal seafood soup featuring daily catch, shellfish, aromatic saffron broth, and garlic rouille."
+                    },
+                    {
+                        name: "Soupe à la Gusteau",
+                        price: "18 € (1p) / 32 € (2p) / 60 € (4p+)",
+                        description: "The legendary, rich signature vegetable and broth creation that inspires dreams. [V, GF]"
+                    },
+                    {
+                        name: "Vichyssoise Glacée",
+                        price: "15 € (1p) / 28 € (2p) / 52 € (4p+)",
+                        description: "Chilled creamy leek and potato velouté finished with fresh chives. [V, GF]"
+                    },
+                    {
+                        name: "Soupe de Poireaux et Pommes de Terre",
+                        price: "14 € (1p) / 26 € (2p) / 48 € (4p+)",
+                        description: "Hearty, comforting leek and potato soup simmered in vegetable broth with fresh herbs. [V, GF]"
+                    },
+                    {
+                        name: "La Soupe Suprême",
+                        price: "22 € (1p) / 40 € (2p) / 75 € (4p+)",
+                        description: "An opulent velvety broth enriched with cream, seasonal mushrooms, and white truffle oil. [V, GF]"
+                    }
+                ]
+            },
+            {
+                pageNumber: 6,
+                category: "Poissons & Fruits de Mer",
+                items: [
+                    {
+                        name: "Poisson Flambé",
+                        price: "42 € (1p) / 78 € (2p) / 150 € (4p+)",
+                        description: "Whole catch of the day flambéed tableside with fine champagne and rich house beurre blanc. [GF, NF]"
+                    },
+                    {
+                        name: "Filet de Sole Meunière",
+                        price: "38 € (1p) / 72 € (2p) / 140 € (4p+)",
+                        description: "Fresh Dover sole sautéed in browned butter, lemon juice, and chopped parsley, deboned tableside."
+                    },
+                    {
+                        name: "Homard Rôti au Beurre Blanc",
+                        price: "48 € (1p) / 92 € (2p) / 180 € (4p+)",
+                        description: "Whole roasted Atlantic lobster glazed with a silky white wine and shallot beurre blanc."
+                    }
+                ]
+            },
+            {
+                pageNumber: 7,
+                category: "Plats Principaux & Ratatouille",
+                items: [
+                    {
+                        name: "Ratatouille",
+                        price: "26 € (1p) / 48 € (2p) / 90 € (4p+)",
+                        description: "Thinly sliced heirloom vegetables layered to perfection, slow-baked with infused olive oil, garlic, and aromatic herbs. [V, GF, DF]"
+                    },
+                    {
+                        name: "Gigot d'Agneau de Sept Heures",
+                        price: "38 € (1p) / 72 € (2p) / 138 € (4p+)",
+                        description: "Seven-hour slow-roasted leg of lamb infused with garlic, rosemary, and thyme until fork-tender."
+                    },
+                    {
+                        name: "Confit de Canard",
+                        price: "32 € (1p) / 60 € (2p) / 115 € (4p+)",
+                        description: "Crispy slow-cooked duck leg confit served with golden sarladaise potatoes and garlic confit."
+                    },
+                    {
+                        name: "Blanquette de Veau",
+                        price: "34 € (1p) / 64 € (2p) / 120 € (4p+)",
+                        description: "Tender veal breast braised in a creamy white velouté sauce with button mushrooms and pearl onions."
+                    }
+                ]
+            },
+            {
+                pageNumber: 8,
+                category: "Viandes & Flambé",
+                items: [
+                    {
+                        name: "Viande Flambée",
+                        price: "44 € (1p) / 82 € (2p) / 160 € (4p+)",
+                        description: "Prime cut selection flambéed tableside with cognac and herb-infused pan juices. [GF, NF]"
+                    },
+                    {
+                        name: "Bœuf Bourguignon",
+                        price: "34 € (1p) / 64 € (2p) / 120 € (4p+)",
+                        description: "Tender chunks of prime beef simmered in rich red wine sauce with carrots, mushrooms, and caramelized onions."
+                    },
+                    {
+                        name: "Entrecôte Café de Paris",
+                        price: "36 € (1p) / 68 € (2p) / 130 € (4p+)",
+                        description: "Prime ribeye steak grilled to perfection, generously topped with the legendary house herb-and-butter sauce."
+                    }
+                ]
+            },
+            {
+                pageNumber: 9,
+                category: "Menu Enfant, Sans Gluten & Menu Amoureux",
+                items: [
+                    {
+                        name: "Le Petit Chef",
+                        price: "18 €",
+                        description: "Adapted from our main menu for younger palates: tender portions of our signature dishes served with a delicate reduction sauce artfully shaped in the likeness of a rat. Includes a special children's dessert. [NF]"
+                    },
+                    {
+                        name: "Poulet Rôti aux Herbes [GF]",
+                        price: "24 € (1p) / 45 € (2p) / 85 € (4p+)",
+                        description: "Certified gluten-free herb-roasted chicken breast served with steamed seasonal vegetables and olive oil mash. [GF, DF]"
+                    },
+                    {
+                        name: "Le Menu Amoureux",
+                        price: "95 € (Pour Deux)",
+                        description: "An intimate, romantic dining experience for two featuring courses crafted with dishes shaped like a heart and finished with an exquisite heart drawn in rich reduction sauce."
+                    }
+                ]
+            },
+            {
+                pageNumber: 10,
+                category: "Les Fromages",
+                items: [
+                    {
+                        name: "Sélection de Finissants Fromages",
+                        price: "22 € (1p) / 40 € (2p) / 75 € (4p+)",
+                        description: "An exquisite curation of the finest artisan cheeses served with crackers, grapes, and fruit preserves."
+                    },
+                    {
+                        name: "Fontaine de Fondu de Fromage",
+                        price: "28 € (1p) / 52 € (2p) / 98 € (4p+)",
+                        description: "A cascading warm cheese fondue fountain served with artisanal breads and crisp accompaniments for dipping."
+                    }
+                ]
+            },
+            {
+                pageNumber: 11,
+                category: "Les Desserts & Flambé, Vins, Cafés & Thés",
+                items: [
+                    {
+                        name: "Dessert Flambé",
+                        price: "22 € (1p) / 40 € (2p) / 75 € (4p+)",
+                        description: "Exquisite tableside flambéed dessert prepared with Grand Marnier liqueur, citrus caramel reduction, and vanilla bean ice cream."
+                    },
+                    {
+                        name: "Tarte Tatin à la Gusteau",
+                        price: "16 € (1p) / 30 € (2p) / 58 € (4p+)",
+                        description: "Our signature caramelized upside-down apple tart served warm with rich crème fraîche."
+                    },
+                    {
+                        name: "Fontaine de Chocolat avec Fraises Éco",
+                        price: "20 € (1p) / 38 € (2p) / 70 € (4p+)",
+                        description: "A flowing chocolate fountain paired with fresh organic eco strawberries and sweet dippers."
+                    },
+                    {
+                        name: "Le Dessert du Jour",
+                        price: "18 € (1p) / 32 € (2p) / 60 € (4p+)",
+                        description: "A daily chef's surprise creation, ensuring something new and delightful for our guests every single day."
+                    },
+                    {
+                        name: "La Sélection des Vins",
+                        price: "Sur Demande",
+                        description: "An exclusive cellar curation of fine French vintages. For a fully customized wine-pairing experience tailored to your palate, please consult our sommelier on request."
+                    },
+                    {
+                        name: "Cafés & Thés",
+                        price: "6 €",
+                        description: "Selection of freshly brewed artisanal espresso, café au lait, and fine loose-leaf teas."
+                    }
+                ]
+            },
+            {
+                pageNumber: 12,
+                category: "Cover",
+                items: []
+            }
+        ]
+    }
+];
