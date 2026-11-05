@@ -115,5 +115,6 @@
 .intro-text {
     font-size: 1.05rem;
     line-height: 1.5;
-    color: #f7e7c4;
+    color: #ffd700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }

@@ -2,6 +2,7 @@
 import './styles/style.css';
 import loadHome from './home.js';
 import loadMenu from './menu.js';
+import loadAbout from './about.js';
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,8 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadHome();
             } else if (text === 'menu') {
                 loadMenu();
+            } else if (text === 'about') {
+                loadAbout();
             }
-            // Ready for About next!
         });
     });
 });
