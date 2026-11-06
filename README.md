@@ -78,3 +78,5 @@ restaurant-page/
 │   └── index.js           # Main SPA entry point & router
 ├── package.json           # Dependencies and scripts
 └── webpack.config.js      # Webpack configuration
+
+Please, consider this project as it is, a form of an elevated fan-art. It is inspired by Ratatouille film. I do not own Ratatouille. Linguini has always been relatable, and in away, I got to experienced what he experienced through code, and this project.
